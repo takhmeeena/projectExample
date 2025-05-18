@@ -1,56 +1,37 @@
-package hw2;
+package graphProject;
+
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        BST<Integer, String> bst = new BST<>();
 
-        System.out.println("=== Inserting nodes ===");
-        bst.put(70, "A");
-        bst.put(90, "B");
-        bst.put(100, "C");
-        bst.put(40, "D");
-        bst.put(20, "E");
-        bst.put(50, "F");
-        bst.put(95, "G");
+        WeightedGraph<String> graph = new WeightedGraph();
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+        graph.addEdge("A","B",1);
+        graph.addEdge("A","C",4);
+        graph.addEdge("B","C",2);
+        graph.addEdge("C","D",1);
+        Search<String> bfs=new BreadthFirstSearch<>(graph,"A");
+        System.out.println("BFS path from A to "+bfs.getPath("D"));
 
-        bst.printTree();
+        Vertex<String> A = new Vertex<>("A");
+        Vertex<String> B = new Vertex<>("B");
+        Vertex<String> C = new Vertex<>("C");
+        Vertex<String> D = new Vertex<>("D");
 
-        System.out.println("\n=== Size of tree ===");
-        System.out.println("Size: " + bst.size());
+        A.addAdjacentVertex(B, 1);
+        A.addAdjacentVertex(C, 4);
+        B.addAdjacentVertex(C, 2);
+        C.addAdjacentVertex(D, 1);
 
-        System.out.println("\n=== Getting values ===");
-        System.out.println("Get 30: " + bst.get(30));
-        System.out.println("Get 70: " + bst.get(70));
-        System.out.println("Get 100 (non-existent): " + bst.get(100));
+        DijkstraSearch<String> dijkstra = new DijkstraSearch<>();
+        Map<Vertex<String>, Double> distances = dijkstra.dijkstra(A);
 
-        System.out.println("\n=== Contains check ===");
-        System.out.println("Contains 60? " + bst.contains(60));
-        System.out.println("Contains 100? " + bst.contains(100));
-
-        System.out.println("\n=== In-order traversal ===");
-        for (BST<Integer, String>.Node node : bst.iterator()) {
-            System.out.println("Key: " + bst.getKey(node) + ", Value: " + bst.getValue(node));
+        for (Map.Entry<Vertex<String>, Double> entry : distances.entrySet()) {
+            System.out.println("Distance from A to " + entry.getKey() + " is " + entry.getValue());
         }
-
-        System.out.println("\n=== Deleting nodes ===");
-        System.out.println("Delete 20 (leaf node)");
-       bst.delete(20);
-        bst.printTree();
-
-        System.out.println("Delete 30 (node with one child)");
-        bst.delete(30);
-        bst.printTree();
-
-        System.out.println("Delete 50 (node with two children - root)");
-        bst.delete(50);
-        bst.printTree();
-
-        System.out.println("\nSize after deletions: " + bst.size());
-
-        System.out.println("\n=== Clearing tree ===");
-        bst.clear();
-        bst.printTree();
-        System.out.println("Size after clear: " + bst.size());
-
     }
 }
